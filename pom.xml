@@ -8,9 +8,9 @@
 		<version>3.3.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.abc</groupId>
+	<groupId>com.demo</groupId>
 	<artifactId>tool-rental</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>tool-rental</name>
 	<description>tool-rental application</description>
 	<url/>
