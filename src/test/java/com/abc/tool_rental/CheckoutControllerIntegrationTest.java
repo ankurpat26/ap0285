@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 @Transactional
 public class CheckoutControllerIntegrationTest {
 
@@ -37,22 +39,6 @@ public class CheckoutControllerIntegrationTest {
 
     private MockMvc mockMvc;
 
-    private static Stream<Arguments> provideTestData() {
-        return Stream.of(
-                Arguments.of("TestCaseNumber_2", "LADW", 3, "10%", "7/2/20", "07/02/20", "Ladder", "Werner", 3, "07/04/20", "$1.99", 2, "$3.98", "$0.40", "$3.58"),
-                Arguments.of("TestCaseNumber_3", "CHNS", 5, "25%", "7/2/15", "07/02/15", "Chainsaw", "Stihl", 5, "07/06/15", "$1.49", 3, "$4.47", "$1.12", "$3.35"),
-                Arguments.of("TestCaseNumber_4", "JAKD", 6, "0%", "9/3/15", "09/03/15", "Jackhammer", "DeWalt", 6, "09/08/15", "$2.99", 3, "$8.97", "$0.00", "$8.97"),
-                Arguments.of("TestCaseNumber_5", "JAKR", 9, "0%", "7/2/15", "07/02/15", "Jackhammer", "Ridgid", 9, "07/10/15", "$2.99", 6, "$17.94", "$0.00", "$17.94"),
-                Arguments.of("TestCaseNumber_6", "JAKR", 4, "50%", "7/2/20", "07/02/20", "Jackhammer", "Ridgid", 4, "07/05/20", "$2.99", 1, "$2.99", "$1.50", "$1.50")
-        );
-    }
-
-    private static Stream<Arguments> provideErrorTestData() {
-        return Stream.of(
-                Arguments.of("TestCaseNumber_1", "JAKR", 5, "101%", "9/3/15", "DISCOUNT_PERCENT_ERROR", "Discount percent must be between 0 and 100.")
-        );
-    }
-
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -62,7 +48,7 @@ public class CheckoutControllerIntegrationTest {
 
     @ParameterizedTest
     @MethodSource("provideTestData")
-    public void testCheckoutEndpoint(String testCaseNumber, String toolCode, int rentalDayCount, String discountPercent, String checkoutDate, String checkoutDateRes,
+    public void testCheckoutEndpoint(String testCaseNumber, String toolCode, int rentalDayCount, String discountPercent,  String checkoutDate,    String checkoutDateRes,
                                      String expectedToolType, String expectedToolBrand, int expectedRentalDays,
                                      String expectedDueDate, String expectedDailyRentalCharge, int expectedChargeDays,
                                      String expectedPreDiscountCharge, String expectedDiscountAmount, String expectedFinalCharge) throws Exception {
@@ -115,5 +101,21 @@ public class CheckoutControllerIntegrationTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value(expectedErrorCode))
                 .andExpect(jsonPath("$.errorMessage").value(expectedErrorMessage));
+    }
+
+    private static Stream<Arguments> provideTestData() {
+        return Stream.of(
+                Arguments.of("TestCaseNumber_2", "LADW", 3, "10%",  "7/2/20", "07/02/20",  "Ladder", "Werner", 3,    "07/04/20","$1.99", 2, "$3.98", "$0.40", "$3.58"),
+                Arguments.of("TestCaseNumber_3",  "CHNS", 5, "25%", "7/2/15", "07/02/15",  "Chainsaw", "Stihl", 5,  "07/06/15", "$1.49", 3, "$4.47", "$1.12", "$3.35"),
+                Arguments.of("TestCaseNumber_4","JAKD", 6, "0%",    "9/3/15", "09/03/15",  "Jackhammer", "DeWalt", 6,  "09/08/15", "$2.99", 3, "$8.97", "$0.00", "$8.97"),
+                Arguments.of("TestCaseNumber_5", "JAKR", 9, "0%",   "7/2/15", "07/02/15",   "Jackhammer", "Ridgid", 9,  "07/10/15", "$2.99", 6, "$17.94", "$0.00", "$17.94"),
+                Arguments.of("TestCaseNumber_6", "JAKR", 4, "50%",  "7/2/20", "07/02/20",    "Jackhammer", "Ridgid", 4, "07/05/20", "$2.99", 1, "$2.99", "$1.50", "$1.50")
+        );
+    }
+
+    private static Stream<Arguments> provideErrorTestData() {
+        return Stream.of(
+                Arguments.of("TestCaseNumber_1", "JAKR", 5, "101%", "9/3/15", "DISCOUNT_PERCENT_ERROR", "Discount percent must be between 0 and 100.")
+                      );
     }
 }

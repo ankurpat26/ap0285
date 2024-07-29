@@ -20,10 +20,12 @@ public class CheckoutController {
     public ResponseEntity<CheckoutResponse> checkout(
             @RequestBody CheckoutRequest request) {
 
-
-        CheckoutResponse response = checkoutService.checkout(request.getToolCode(), request.getRentalDayCount(), request.getDiscountPercent(), request.getCheckoutDate());
-        return ResponseEntity.ok(response);
-
+        try {
+            CheckoutResponse response = checkoutService.checkout(request.getToolCode(), request.getRentalDayCount(), request.getDiscountPercent(), request.getCheckoutDate());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw e; // Handled by GlobalExceptionHandler
+        }
 
     }
 }

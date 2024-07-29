@@ -1,8 +1,5 @@
 package com.abc.tool_rental.exception;
 
-import lombok.Getter;
-
-@Getter
 public enum ErrorCode {
     RENTAL_DAY_COUNT_ERROR("RENTAL_DAY_COUNT_ERROR", "Rental day count must be 1 or greater."),
     TOOL_CODE_EMPTY("TOOL_CODE_EMPTY", "Tool Code can not be empty or null"),
@@ -19,4 +16,11 @@ public enum ErrorCode {
         this.defaultMessage = defaultMessage;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public String getDefaultMessage() {
+        return defaultMessage;
+    }
 }

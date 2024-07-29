@@ -11,31 +11,34 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/toolTypes")
 public class ToolTypeController {
-
     @Autowired
     private ToolTypeService toolTypeService;
 
     @PostMapping
     public ResponseEntity<ToolType> createToolType(@RequestBody ToolType toolType) {
-        ToolType savedToolType = toolTypeService.saveToolType(toolType);
-        return ResponseEntity.ok(savedToolType);
+        ToolType createdToolType = toolTypeService.saveToolType(toolType);
+        return ResponseEntity.ok(createdToolType);
     }
 
     @GetMapping
     public ResponseEntity<List<ToolType>> getAllToolTypes() {
-        List<ToolType> toolTypes = toolTypeService.getAllToolTypes();
-        return ResponseEntity.ok(toolTypes);
+        return ResponseEntity.ok(toolTypeService.getAllToolTypes());
     }
 
     @GetMapping("/{toolType}")
-    public ResponseEntity<ToolType> getToolTypeById(@PathVariable String toolType) {
-        ToolType foundToolType = toolTypeService.getToolTypeById(toolType);
-        return foundToolType != null ? ResponseEntity.ok(foundToolType) : ResponseEntity.notFound().build();
+    public ResponseEntity<ToolType> getToolTypeByType(@PathVariable String toolType) {
+        return ResponseEntity.ok(toolTypeService.getToolTypeByType(toolType));
     }
 
-    @DeleteMapping("/{toolType}")
-    public ResponseEntity<Void> deleteToolType(@PathVariable String toolType) {
-        toolTypeService.deleteToolType(toolType);
+//    @PutMapping("/{id}")
+//    public ResponseEntity<ToolType> updateToolType(@PathVariable Long id, @RequestBody ToolType toolType) {
+//        toolType.setId(id);
+//        return ResponseEntity.ok(toolTypeService.saveToolType(toolType));
+//    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteToolType(@PathVariable Long id) {
+        toolTypeService.deleteToolType(id);
         return ResponseEntity.noContent().build();
     }
 }
