@@ -34,7 +34,7 @@ public class CheckoutService {
             throw new RequestPayloadException(ErrorCode.DISCOUNT_PERCENT_ERROR);
         }
 
-        Tool tool = toolRepository.findByToolCode(toolCode);
+        Tool tool = toolRepository.findById(toolCode).orElseThrow(() -> new RequestPayloadException(ErrorCode.TOOL_NOT_FOUND_ERROR));
         if (tool == null) {
             throw new RequestPayloadException(ErrorCode.TOOL_NOT_FOUND_ERROR);
         }

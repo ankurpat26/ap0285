@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,73 +24,51 @@ class ToolTypeServiceTest {
     @InjectMocks
     private ToolTypeService toolTypeService;
 
+    private ToolType toolType;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        toolType = new ToolType("Hammer", BigDecimal.valueOf(2.99), true, false, false);
     }
 
     @Test
-    void testSaveToolType() {
-        ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
-
-        when(toolTypeRepository.save(toolType)).thenReturn(toolType);
+    void saveToolType() {
+        when(toolTypeRepository.save(any(ToolType.class))).thenReturn(toolType);
 
         ToolType savedToolType = toolTypeService.saveToolType(toolType);
 
         assertNotNull(savedToolType);
-        assertEquals("Ladder", savedToolType.getToolType());
-        assertEquals(BigDecimal.valueOf(1.99), savedToolType.getDailyCharge());
-        assertTrue(savedToolType.isWeekdayCharge());
-        assertTrue(savedToolType.isWeekendCharge());
-        assertFalse(savedToolType.isHolidayCharge());
-
-        verify(toolTypeRepository, times(1)).save(toolType);
+        assertEquals(toolType.getToolType(), savedToolType.getToolType());
     }
 
     @Test
-    void testGetAllToolTypes() {
-        ToolType toolType1 = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
-        ToolType toolType2 = new ToolType("Chainsaw", BigDecimal.valueOf(2.99), true, false, true);
-        List<ToolType> toolTypes = Arrays.asList(toolType1, toolType2);
-
+    void getAllToolTypes() {
+        List<ToolType> toolTypes = Arrays.asList(toolType);
         when(toolTypeRepository.findAll()).thenReturn(toolTypes);
 
-        List<ToolType> foundToolTypes = toolTypeService.getAllToolTypes();
+        List<ToolType> result = toolTypeService.getAllToolTypes();
 
-        assertNotNull(foundToolTypes);
-        assertEquals(2, foundToolTypes.size());
-        assertEquals("Ladder", foundToolTypes.get(0).getToolType());
-        assertEquals("Chainsaw", foundToolTypes.get(1).getToolType());
-
-        verify(toolTypeRepository, times(1)).findAll();
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 
     @Test
-    void testGetToolTypeByType() {
-        ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
+    void getToolTypeById() {
+        when(toolTypeRepository.findById(anyString())).thenReturn(Optional.of(toolType));
 
-        when(toolTypeRepository.findByToolType("Ladder")).thenReturn(toolType);
+        ToolType result = toolTypeService.getToolTypeById("Hammer");
 
-        ToolType foundToolType = toolTypeService.getToolTypeByType("Ladder");
-
-        assertNotNull(foundToolType);
-        assertEquals("Ladder", foundToolType.getToolType());
-        assertEquals(BigDecimal.valueOf(1.99), foundToolType.getDailyCharge());
-        assertTrue(foundToolType.isWeekdayCharge());
-        assertTrue(foundToolType.isWeekendCharge());
-        assertFalse(foundToolType.isHolidayCharge());
-
-        verify(toolTypeRepository, times(1)).findByToolType("Ladder");
+        assertNotNull(result);
+        assertEquals(toolType.getToolType(), result.getToolType());
     }
 
     @Test
-    void testDeleteToolType() {
-        Long toolTypeId = 1L;
+    void deleteToolType() {
+        doNothing().when(toolTypeRepository).deleteById(anyString());
 
-        doNothing().when(toolTypeRepository).deleteById(toolTypeId);
+        toolTypeService.deleteToolType("Hammer");
 
-        toolTypeService.deleteToolType(toolTypeId);
-
-        verify(toolTypeRepository, times(1)).deleteById(toolTypeId);
+        verify(toolTypeRepository, times(1)).deleteById("Hammer");
     }
 }

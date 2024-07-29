@@ -1,6 +1,5 @@
 package com.abc.tool_rental.service;
 
-
 import com.abc.tool_rental.model.ToolType;
 import com.abc.tool_rental.repository.ToolTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,11 @@ public class ToolTypeService {
         return toolTypeRepository.findAll();
     }
 
-    public ToolType getToolTypeByType(String toolType) {
-        return toolTypeRepository.findByToolType(toolType);
+    public ToolType getToolTypeById(String toolType) {
+        return toolTypeRepository.findById(toolType).orElse(null);
     }
 
-    public void deleteToolType(Long id) {
-        toolTypeRepository.deleteById(id);
+    public void deleteToolType(String toolType) {
+        toolTypeRepository.deleteById(toolType);
     }
 }

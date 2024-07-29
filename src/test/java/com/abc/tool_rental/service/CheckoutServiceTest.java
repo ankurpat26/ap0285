@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -42,7 +43,7 @@ class CheckoutServiceTest {
         ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
         Tool tool = new Tool(toolCode,toolTypeStr ,"Werner", toolType);
 
-        when(toolRepository.findByToolCode(toolCode)).thenReturn(tool);
+        when(toolRepository.findById(toolCode)).thenReturn(Optional.of(tool));
 
         CheckoutResponse response = checkoutService.checkout(toolCode, rentalDayCount, discountPercent, checkoutDate);
 
@@ -58,12 +59,12 @@ class CheckoutServiceTest {
         assertEquals(BigDecimal.valueOf(0.398), response.getDiscountAmount());
         assertEquals(BigDecimal.valueOf(3.582), response.getFinalCharge());
 
-        verify(toolRepository, times(1)).findByToolCode(toolCode);
+        verify(toolRepository, times(1)).findById(toolCode);
     }
 
     @Test
     void testCheckoutWithToolNotFound() {
-        when(toolRepository.findByToolCode("LADW")).thenReturn(null);
+        when(toolRepository.findById("LADW")).thenReturn(Optional.empty());
 
         RequestPayloadException exception = assertThrows(RequestPayloadException.class, () -> {
             checkoutService.checkout("LADW", 3, 10, LocalDate.of(2023, 7, 2));

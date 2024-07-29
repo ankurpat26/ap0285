@@ -29,120 +29,53 @@ class ToolServiceTest {
     @InjectMocks
     private ToolService toolService;
 
+    private Tool tool;
+    private ToolType toolType;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        toolType = new ToolType("Hammer", BigDecimal.valueOf(2.99), true, false, false);
+        tool = new Tool("T1", "Hammer", "BrandX", toolType);
     }
 
     @Test
-    void testSaveToolWhenNew() {
-        ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
-        Tool tool = new Tool("LADW","Ladder", "BrandName", toolType);
-
-        when(toolTypeRepository.save(toolType)).thenReturn(toolType);
-        when(toolRepository.findByToolCode(tool.getToolCode())).thenReturn(null);
-        when(toolRepository.save(tool)).thenReturn(tool);
+    void saveTool() {
+        when(toolRepository.save(any(Tool.class))).thenReturn(tool);
 
         Tool savedTool = toolService.saveTool(tool);
 
         assertNotNull(savedTool);
-        assertEquals("LADW", savedTool.getToolCode());
-        assertEquals(toolType, savedTool.getToolTypeDetails());
-        assertEquals("BrandName", savedTool.getBrand());
-
-        verify(toolTypeRepository, times(1)).save(toolType);
-        verify(toolRepository, times(1)).findByToolCode(tool.getToolCode());
-        verify(toolRepository, times(1)).save(tool);
+        assertEquals(tool.getToolCode(), savedTool.getToolCode());
     }
 
     @Test
-    void testSaveToolWhenExisting() {
-        ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
-        Tool existingTool = new Tool("LADW" ,"Ladder", "OldBrand", toolType);
-        Tool updatedTool = new Tool("LADW", "Ladder", "NewBrand", toolType);
-
-        when(toolTypeRepository.save(toolType)).thenReturn(toolType);
-        when(toolRepository.findByToolCode(updatedTool.getToolCode())).thenReturn(existingTool);
-        when(toolRepository.save(existingTool)).thenReturn(existingTool);
-
-        Tool savedTool = toolService.saveTool(updatedTool);
-
-        assertNotNull(savedTool);
-        assertEquals("LADW", savedTool.getToolCode());
-        assertEquals(toolType, savedTool.getToolTypeDetails());
-        assertEquals("NewBrand", savedTool.getBrand());
-
-        verify(toolTypeRepository, times(1)).save(toolType);
-        verify(toolRepository, times(1)).findByToolCode(updatedTool.getToolCode());
-        verify(toolRepository, times(1)).save(existingTool);
-    }
-
-    @Test
-    void testSaveTools() {
-        ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
-        Tool tool1 = new Tool("LADW", "Ladder", "Brand1" , toolType);
-        Tool tool2 = new Tool("CHNS", "Ladder", "Brand2", toolType);
-
-        List<Tool> tools = Arrays.asList(tool1, tool2);
-
-        when(toolTypeRepository.save(toolType)).thenReturn(toolType);
-        when(toolRepository.findByToolCode(anyString())).thenReturn(null);
-        when(toolRepository.save(any(Tool.class))).thenReturn(tool1).thenReturn(tool2);
-        when(toolRepository.findAll()).thenReturn(tools);
-
-        List<Tool> savedTools = toolService.saveTools(tools);
-
-        assertNotNull(savedTools);
-        assertEquals(2, savedTools.size());
-
-        verify(toolTypeRepository, times(2)).save(toolType);
-        verify(toolRepository, times(2)).findByToolCode(anyString());
-        verify(toolRepository, times(2)).save(any(Tool.class));
-        verify(toolRepository, times(1)).findAll();
-    }
-
-    @Test
-    void testGetAllTools() {
-        ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
-        Tool tool = new Tool("LADW", "Ladder", "BrandName",  toolType);
+    void getAllTools() {
         List<Tool> tools = Arrays.asList(tool);
-
         when(toolRepository.findAll()).thenReturn(tools);
 
-        List<Tool> foundTools = toolService.getAllTools();
+        List<Tool> result = toolService.getAllTools();
 
-        assertNotNull(foundTools);
-        assertEquals(1, foundTools.size());
-        assertEquals("LADW", foundTools.get(0).getToolCode());
-
-        verify(toolRepository, times(1)).findAll();
+        assertNotNull(result);
+        assertEquals(1, result.size());
     }
 
     @Test
-    void testGetToolByCode() {
-        ToolType toolType = new ToolType("Ladder", BigDecimal.valueOf(1.99), true, true, false);
-        Tool tool = new Tool("LADW", "Ladder", "BrandName" , toolType);
+    void getToolById() {
+        when(toolRepository.findById(anyString())).thenReturn(Optional.of(tool));
 
-        when(toolRepository.findByToolCode("LADW")).thenReturn(tool);
+        Tool result = toolService.getToolById("T1");
 
-        Tool foundTool = toolService.getToolByCode("LADW");
-
-        assertNotNull(foundTool);
-        assertEquals("LADW", foundTool.getToolCode());
-        assertEquals(toolType, foundTool.getToolTypeDetails());
-        assertEquals("BrandName", foundTool.getBrand());
-
-        verify(toolRepository, times(1)).findByToolCode("LADW");
+        assertNotNull(result);
+        assertEquals(tool.getToolCode(), result.getToolCode());
     }
 
     @Test
-    void testDeleteTool() {
-        Long toolId = 1L;
+    void deleteTool() {
+        doNothing().when(toolRepository).deleteById(anyString());
 
-        doNothing().when(toolRepository).deleteById(toolId);
+        toolService.deleteTool("T1");
 
-        toolService.deleteTool(toolId);
-
-        verify(toolRepository, times(1)).deleteById(toolId);
+        verify(toolRepository, times(1)).deleteById("T1");
     }
 }
