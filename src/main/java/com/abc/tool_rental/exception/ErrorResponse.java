@@ -1,8 +1,14 @@
 package com.abc.tool_rental.exception;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 public class ErrorResponse {
+
     private String errorCode;
     private String errorMessage;
     private LocalDateTime timestamp;
@@ -13,28 +19,4 @@ public class ErrorResponse {
         this.timestamp = timestamp;
     }
 
-    // Getters and Setters
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }
