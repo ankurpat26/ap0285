@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "9983b9dc-205b-49a3-b691-a5f59e091de9",
+		"name": "Tool-Rental",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "13649967"
+	},
+	"item": [
+		{
+			"name": "/checkout TestCase1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"toolCode\": \"JAKR\",\r\n  \"rentalDayCount\": 5,\r\n  \"discountPercent\": \"101%\",\r\n  \"checkoutDate\": \"9/3/15\"\r\n}"
+				},
+				"url": "http://localhost:8080/api/checkout"
+			},
+			"response": []
+		},
+		{
+			"name": "/checkout TestCase2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"toolCode\": \"LADW\",\r\n    \"rentalDayCount\": 3,\r\n    \"discountPercent\": \"10%\",\r\n    \"checkoutDate\": \"7/2/20\"\r\n  }"
+				},
+				"url": "http://localhost:8080/api/checkout"
+			},
+			"response": []
+		},
+		{
+			"name": "/checkout TestCase3",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n    \"toolCode\": \"CHNS\",\r\n    \"rentalDayCount\": 5,\r\n    \"discountPercent\": \"25%\",\r\n    \"checkoutDate\": \"7/2/15\"\r\n  }"
+				},
+				"url": "http://localhost:8080/api/checkout"
+			},
+			"response": []
+		},
+		{
+			"name": "/checkout TestCase4",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n    \"toolCode\": \"JAKD\",\r\n    \"rentalDayCount\": 6,\r\n    \"discountPercent\": \"0%\",\r\n    \"checkoutDate\": \"9/3/15\"\r\n  }"
+				},
+				"url": "http://localhost:8080/api/checkout"
+			},
+			"response": []
+		},
+		{
+			"name": "/checkout TestCase5",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"toolCode\": \"JAKR\",\r\n    \"rentalDayCount\": 9,\r\n    \"discountPercent\": \"0%\",\r\n    \"checkoutDate\": \"7/2/15\"\r\n  }"
+				},
+				"url": "http://localhost:8080/api/checkout"
+			},
+			"response": []
+		},
+		{
+			"name": "/checkout TestCase6",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\r\n    \"toolCode\": \"JAKR\",\r\n    \"rentalDayCount\": 4,\r\n    \"discountPercent\": \"50%\",\r\n    \"checkoutDate\": \"7/2/20\"\r\n  }"
+				},
+				"url": "http://localhost:8080/api/checkout"
+			},
+			"response": []
+		}
+	]
+}
